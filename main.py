@@ -22,6 +22,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 def _find_data_dir() -> Path:
@@ -41,6 +42,15 @@ app = FastAPI(
     title="NEET 2026 Predictor",
     description="Rank predictor + MBBS college predictor built on real NEET cutoff data.",
     version="2.0.0",
+)
+
+# This is a public read-only API, so allow calls from any frontend origin.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
