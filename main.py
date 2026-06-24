@@ -176,8 +176,9 @@ def predict_colleges(
             }
         )
 
-    # Best chances first; within the same probability, closest cutoffs first.
-    results.sort(key=lambda x: (-x["probability"], x["closing_rank"]))
+    # Best chances first; within the same chance, the colleges whose cutoff is
+    # nearest the user's rank (most relevant — best reachable / closest reach).
+    results.sort(key=lambda x: (-x["probability"], abs(x["diff"])))
     return results[:limit]
 
 
