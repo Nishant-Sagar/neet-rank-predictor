@@ -24,7 +24,16 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 
-DATA_DIR = Path(__file__).parent / "data"
+def _find_data_dir() -> Path:
+    """Locate the data/ dir whether run locally or bundled on Vercel."""
+    here = Path(__file__).resolve().parent
+    for candidate in (here / "data", here.parent / "data", Path.cwd() / "data"):
+        if candidate.is_dir():
+            return candidate
+    return here / "data"
+
+
+DATA_DIR = _find_data_dir()
 MAX_MARKS = 720
 PRIMARY_YEAR = 2025  # latest completed counselling cycle, used as the 2026 baseline
 
